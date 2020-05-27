@@ -1,24 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Router } from '@reach/router';
+import Navbar from './Navbar';
+import Home from './Home';
+import CollapsableMenu from './components/CollapsableMenu/CollapsableMenu';
 import './App.css';
+import styled from 'styled-components';
+
+const StyledRouter = styled(Router)`
+  position: relative;
+  top: 70px;
+`;
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <StyledRouter>
+        <Home path="/" />
+        <CollapsableMenu path="/collapsablemenu" />
+      </StyledRouter>
     </div>
   );
 }
