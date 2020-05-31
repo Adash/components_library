@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import 'styled-components/macro';
-import { CSSTransiton } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import { ReactComponent as BellIcon } from './icons/bell.svg';
 import { ReactComponent as MessengerIcon } from './icons/messenger.svg';
 import { ReactComponent as CaretIcon } from './icons/caret.svg';
@@ -61,7 +61,7 @@ const StyledNavItem = styled.li`
   justify-content: center;
 `;
 
-const IconButton = styled.a`
+const IconButton = styled.span`
   --button-size: calc(var(--nav-size) * 0.5);
   width: var(--button-size);
   height: var(--button-size);
@@ -99,7 +99,7 @@ const StyledDropdownMenu = styled.div`
   /* transition: height var(--speed) ease; */
   z-index: -5;
   top: ${(props) => (props.top ? props.top : '-200px')};
-  transition: top 300ms ease-out;
+  transition: all 300ms ease-out;
 `;
 
 const StyledMenuItem = styled.a`
@@ -123,7 +123,7 @@ const StyledMenuItem = styled.a`
   }
 `;
 
-const IconRight = styled.a`
+const IconRight = styled.span`
   fill: var(--text-color);
   margin-left: auto;
   --button-size: calc(var(--nav-size) * 0.2);
@@ -147,36 +147,110 @@ const DropdownItem = (props) => (
 const DropdownMenu = () => {
   const [activeMenu, setActiveMenu] = useState('main');
   const [top, setTop] = useState(0);
+  const [menuHeight, setMenuHeight] = useState(null);
+  // const dropdownRef = useRef(null);
+
   useEffect(() => {
+    // this was in the original tutorial but seems unnecesary
+    // setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
+
     setTop('59px');
     return () => {
       setTop('-200px');
     };
   }, []);
 
+  const calcHeight = (el) => {
+    const height = el.offsetHeight;
+    setMenuHeight(height);
+  };
+
   return (
-    <StyledDropdownMenu top={top}>
-      <div
-        css={`
-          width: 100%;
-        `}
+    <StyledDropdownMenu top={top} style={{ height: menuHeight }}>
+      <CSSTransition
+        in={activeMenu === 'main'}
+        timeout={500}
+        unmountOnExit
+        classNames="menu-primary"
+        onEnter={calcHeight}
       >
-        <DropdownItem>My Profile</DropdownItem>
-        <DropdownItem
-          leftIcon={<CogIcon />}
-          rightIcon={<ChevronIcon />}
-          goToMenu="settings"
+        <div
+          css={`
+            width: 100%;
+          `}
         >
-          Settings
-        </DropdownItem>
-        <DropdownItem
-          leftIcon="🦧"
-          rightIcon={<ChevronIcon />}
-          goToMenu="animals"
+          <DropdownItem>My Profile {menuHeight}</DropdownItem>
+          <DropdownItem
+            leftIcon={<CogIcon />}
+            rightIcon={<ChevronIcon />}
+            setActiveMenu={setActiveMenu}
+            goToMenu="settings"
+          >
+            Settings
+          </DropdownItem>
+          <DropdownItem
+            leftIcon="🦧"
+            rightIcon={<ChevronIcon />}
+            setActiveMenu={setActiveMenu}
+            goToMenu="animals"
+          >
+            Animals
+          </DropdownItem>
+        </div>
+      </CSSTransition>
+
+      <CSSTransition
+        in={activeMenu === 'settings'}
+        timeout={500}
+        unmountOnExit
+        classNames="menu-secondary"
+        onEnter={calcHeight}
+      >
+        <div
+          css={`
+            width: 100%;
+          `}
         >
-          Animals
-        </DropdownItem>
-      </div>
+          <DropdownItem>Settings {menuHeight}</DropdownItem>
+          <DropdownItem
+            leftIcon={<ArrowIcon />}
+            setActiveMenu={setActiveMenu}
+            goToMenu="main"
+          >
+            Main
+          </DropdownItem>
+          <DropdownItem leftIcon={<BoltIcon />}>HTML</DropdownItem>
+          <DropdownItem leftIcon={<BoltIcon />}>CSS</DropdownItem>
+          <DropdownItem leftIcon={<BoltIcon />}>JavaScript</DropdownItem>
+          <DropdownItem leftIcon={<BoltIcon />}>Awesome!</DropdownItem>
+        </div>
+      </CSSTransition>
+      <CSSTransition
+        in={activeMenu === 'animals'}
+        timeout={500}
+        unmountOnExit
+        classNames="menu-secondary"
+        onEnter={calcHeight}
+      >
+        <div
+          css={`
+            width: 100%;
+          `}
+        >
+          <DropdownItem>Animals {menuHeight}</DropdownItem>
+          <DropdownItem
+            leftIcon={<ArrowIcon />}
+            setActiveMenu={setActiveMenu}
+            goToMenu="main"
+          >
+            Main
+          </DropdownItem>
+          <DropdownItem leftIcon="🦘">Kangaroo</DropdownItem>
+          <DropdownItem leftIcon="🐸">Frog</DropdownItem>
+          <DropdownItem leftIcon="🦋">Horse?</DropdownItem>
+          <DropdownItem leftIcon="🦔">Hedgehog</DropdownItem>
+        </div>
+      </CSSTransition>
     </StyledDropdownMenu>
   );
 };
