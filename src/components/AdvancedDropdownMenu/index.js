@@ -148,7 +148,9 @@ const DropdownMenu = () => {
   const [activeMenu, setActiveMenu] = useState('main');
   const [top, setTop] = useState(0);
   const [menuHeight, setMenuHeight] = useState(null);
-  // const dropdownRef = useRef(null);
+  const mainRef = useRef(null);
+  const settingsRef = useRef(null);
+  const animalsRef = useRef(null);
 
   useEffect(() => {
     // this was in the original tutorial but seems unnecesary
@@ -173,8 +175,10 @@ const DropdownMenu = () => {
         unmountOnExit
         classNames="menu-primary"
         onEnter={calcHeight}
+        nodeRef={mainRef}
       >
         <div
+          ref={mainRef}
           css={`
             width: 100%;
           `}
@@ -205,8 +209,10 @@ const DropdownMenu = () => {
         unmountOnExit
         classNames="menu-secondary"
         onEnter={calcHeight}
+        nodeRef={settingsRef}
       >
         <div
+          ref={settingsRef}
           css={`
             width: 100%;
           `}
@@ -231,8 +237,10 @@ const DropdownMenu = () => {
         unmountOnExit
         classNames="menu-secondary"
         onEnter={calcHeight}
+        nodeRef={animalsRef}
       >
         <div
+          ref={animalsRef}
           css={`
             width: 100%;
           `}
