@@ -11,6 +11,8 @@ import { ReactComponent as ChevronIcon } from './icons/chevron.svg';
 import { ReactComponent as ArrowIcon } from './icons/arrow.svg';
 import { ReactComponent as BoltIcon } from './icons/bolt.svg';
 
+import './styles.css';
+
 const MainWrapper = styled.div`
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -87,9 +89,9 @@ const IconButton = styled.span`
 
 const StyledDropdownMenu = styled.div`
   position: absolute;
-  top: 58px;
   width: 300px;
-  transform: translateX(-45%);
+  /* transform: translateX(-45%); */
+  /* right: 20px; */
   background-color: var(--bg);
   border: var(--border);
   border-radius: var(--border-radius);
@@ -97,9 +99,10 @@ const StyledDropdownMenu = styled.div`
   overflow: hidden;
   /* opacity: ${(props) => (props.opacity ? props.opacity : 0)}; */
   /* transition: height var(--speed) ease; */
-  z-index: -5;
-  top: ${(props) => (props.top ? props.top : '-200px')};
-  transition: all 300ms ease-out;
+  z-index: -59;
+  /* top: ${(props) => (props.top ? props.top : '-200px')}; */
+  top: 58px;
+  /* transition: all 300ms ease-out; */
 `;
 
 const StyledMenuItem = styled.a`
@@ -146,21 +149,23 @@ const DropdownItem = (props) => (
 
 const DropdownMenu = () => {
   const [activeMenu, setActiveMenu] = useState('main');
-  const [top, setTop] = useState(0);
+  // const [top, setTop] = useState(0);
   const [menuHeight, setMenuHeight] = useState(null);
+  // the refs are needed to silence the findDomNote ReactStrict error
   const mainRef = useRef(null);
   const settingsRef = useRef(null);
   const animalsRef = useRef(null);
 
-  useEffect(() => {
-    // this was in the original tutorial but seems unnecesary
-    // setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
+  // this has been replaced by CSSTransition on NavItem
+  // useEffect(() => {
+  //   // this was in the original tutorial but seems unnecesary
+  //   // setMenuHeight(dropdownRef.current?.firstChild.offsetHeight);
 
-    setTop('59px');
-    return () => {
-      setTop('-200px');
-    };
-  }, []);
+  //   setTop('59px');
+  //   return () => {
+  //     setTop('-200px');
+  //   };
+  // }, []);
 
   const calcHeight = (el) => {
     const height = el.offsetHeight;
@@ -168,7 +173,7 @@ const DropdownMenu = () => {
   };
 
   return (
-    <StyledDropdownMenu top={top} style={{ height: menuHeight }}>
+    <StyledDropdownMenu style={{ height: menuHeight }}>
       <CSSTransition
         in={activeMenu === 'main'}
         timeout={500}
@@ -263,15 +268,51 @@ const DropdownMenu = () => {
   );
 };
 
+const SimpleDropdownMenu = () => {
+  return (
+    <StyledDropdownMenu>
+      <div
+        css={`
+          width: 100%;
+        `}
+      >
+        <DropdownItem>My Profile </DropdownItem>
+        <DropdownItem
+          leftIcon={<CogIcon />}
+          rightIcon={<ChevronIcon />}
+          goToMenu="settings"
+        >
+          Settings
+        </DropdownItem>
+        <DropdownItem
+          leftIcon="🦧"
+          rightIcon={<ChevronIcon />}
+          goToMenu="animals"
+        >
+          Animals
+        </DropdownItem>
+      </div>
+    </StyledDropdownMenu>
+  );
+};
+
 const NavItem = ({ icon, children }) => {
   const [open, setOpen] = useState(false);
-
   return (
     <StyledNavItem>
       <IconButton href="#" onClick={() => setOpen(!open)}>
         {icon}
       </IconButton>
-      {open && children}
+      <CSSTransition
+        in={open}
+        timeout={400}
+        unmountOnExit
+        classNames="drop"
+        // try to use nodeRef with this implementation
+        // nodeRef={mainRef}
+      >
+        {children}
+      </CSSTransition>
     </StyledNavItem>
   );
 };
@@ -285,7 +326,7 @@ const Navbar = () => {
         <NavItem icon={<MessengerIcon />} />
 
         <NavItem icon={<CaretIcon />}>
-          <DropdownMenu />
+          <SimpleDropdownMenu />
         </NavItem>
       </StyledUl>
     </StyledNav>

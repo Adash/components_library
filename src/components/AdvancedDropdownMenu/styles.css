@@ -22,9 +22,56 @@
   transform: translateX(0%);
   transition: all var(--speed) ease;
 }
-.menu-secondary-exit {
-}
+/* .menu-secondary-exit {
+} */
 .menu-secondary-exit-active {
   transform: translateX(110%);
   transition: all var(--speed) ease;
+}
+
+/* IMPORTANT!!
+  If you use any of the css properties which you use on the transition 
+  classes directly on the element which you want to 'transition' it
+  won't work. The properties will not get overrided
+*/
+
+/* Slide from the top */
+/* .drop-enter {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(-110%);
+}
+.drop-enter-active {
+  opacity: 1;
+  transform: translateY(0%);
+  transition: transform 600ms ease, opacity 1000ms;
+}
+.drop-exit {
+  position: absolute;
+}
+.drop-exit-active {
+  opacity: 0;
+  transform: translateY(-110%);
+  transition: transform 600ms ease, opacity 300ms;
+} */
+
+/* Slide from right */
+.drop-enter {
+  position: absolute;
+  right: -400px;
+}
+.drop-enter-active {
+  right: 20px;
+  transition: all 600ms ease;
+}
+.drop-enter-done {
+  right: 20px;
+}
+.drop-exit {
+  right: 20px;
+  position: absolute;
+}
+.drop-exit-active {
+  right: -400px;
+  transition: all 600ms ease;
 }
