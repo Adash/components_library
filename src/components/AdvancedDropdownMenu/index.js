@@ -326,7 +326,7 @@ const Navbar = () => {
         <NavItem icon={<MessengerIcon />} />
 
         <NavItem icon={<CaretIcon />}>
-          <SimpleDropdownMenu />
+          <DropdownMenu />
         </NavItem>
       </StyledUl>
     </StyledNav>

@@ -1,0 +1,2 @@
+- add React suspense in order to prevent loading css sheets from 
+  other unrelated components
